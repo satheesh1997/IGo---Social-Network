@@ -1,0 +1,46 @@
+{% extends 'registration/base.html' %}
+{% block title %} - Network {% endblock %}
+{% block container %}
+	<!-- Login Starts !-->
+	<div class="container-fluid login">
+		<div class="row">
+			<div class="col col-lg-4 col-sm-4 col-md-4 col-xs-12 col-lg-offset-6 col-md-offset-6 col-sm-offset-6">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<h5 class="text-center">Login to explore</h5>
+						<form action="" method="post" class="form-horizontal login_form" role="form" id="login_form">
+							{% csrf_token %}
+							<div class="input-group">
+								<div class="input-group-addon"><i class="fa fa-user"></i></div>
+								<input type="text" class="form-control" name="username" id="username" placeholder="Username" required>
+								<div class="input-group-addon" style="display: none;"><i class="fa fa-user"></i></div>
+							</div><br>
+							<div class="input-group">
+								<div class="input-group-addon"><i class="fa fa-key"></i></div>
+								<input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
+								<div class="input-group-addon" style="display: none;"><i class="fa fa-key"></i></div>
+							</div>
+							<script> 
+								$('#password').on('keydown', function(e){
+									if(e.which == 13){
+										$('#login_btn').click();
+									}
+								});
+							</script>
+							<p class="error-msg text-center text-danger">{% if form.errors %} Invalid UserName & Password {% endif %}</p>
+							<div class="form-group text-center">
+								<button type="button" class="btn btn-sm btn-success" id="login_btn"><i
+										class="fa fa-sign-in"></i> Login</button>
+								<button type="button" class="btn btn-sm btn-primary" onclick="window.location='{% url 'home:register' %}'"><i
+										class="fa fa-user-plus"></i> New Account</button>
+								<button type="button" class="btn btn-sm btn-warning" onclick='window.location=""'>Forget Password <i
+										class="fa fa-arrow-right"></i></button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Login  Ends !-->
+{% endblock %}

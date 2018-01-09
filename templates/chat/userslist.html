@@ -1,0 +1,11 @@
+{% load humanize %}
+{% for user in userslist %}
+    <li class="list-group-item" style="border-radius:0px;">
+        {% if user.time|naturaltime == "now" %}
+            <span class="badge" style="background:transparent;color:green;"><i class="fa fa-circle"></i> </span>
+        {% else %}
+            <span class="badge" style="background:red;">{{ user.time | naturaltime }}</span>
+        {% endif %}
+        {{ user.user.get_full_name }}
+    </li>
+{% endfor %}

@@ -1,0 +1,64 @@
+{% extends 'registration/base.html' %}
+{% block title %} - Step2 {% endblock %}
+{% block container %}
+	<!-- Step2 Starts !-->
+	<div class="container-fluid update-step">
+		<div class="row">
+			<div class="col col-lg-6 col-sm-6 col-md-6 col-xs-12 col-lg-offset-6 col-md-offset-6 col-sm-offset-6">
+								<div class="progress" style="height:10px;margin-bottom:-10px;border-bottom-left-radius:0px;">
+										<div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar"
+												 aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%">
+												<span class="sr-only">50% Complete</span>
+										</div>
+								</div>
+								<div class="panel panel-default">
+					<div class="panel-body">
+												<h3 class="text-center text-danger">Step 2</h3>
+						<h4 class="text-center text-primary">Update your Institution to proceed with login<br><br></h4>
+						<form action="" method="post" class="form-horizontal" role="form" id="step_2_form">
+							{% csrf_token %}
+														<div class="control-group col-lg-6 col-sm-6 col-md-6 col-xs-12">
+																<div class="input-group">
+																		<div class="input-group-addon"><i class="fa fa-university"></i></div>
+																		<input type="text" class="form-control" name="institution_1" id="institution_1" placeholder="University / College / Institution" required value="">
+																		<div class="input-group-addon" style="display: none;"><i class="fa fa-university"></i></div>
+																</div><br>
+														</div>
+														<div class="control-group col-lg-6 col-sm-6 col-md-6 col-xs-12">
+																<div class="input-group">
+																		<div class="input-group-addon"><input type="checkbox" id="is_studying_1_check"></div>
+																		<input type="text" class="form-control" name="grade_1" id="grade_1" placeholder="Degree-Course" required value="">
+																		<div class="input-group-addon" style="display: none;"><i class="fa fa-book"></i></div>
+																</div><br>
+														</div>
+														<div class="control-group col-lg-6 col-sm-6 col-md-6 col-xs-12">
+																<div class="input-group">
+																		<div class="input-group-addon"><i class="fa fa-university"></i></div>
+																		<input type="text" class="form-control" name="institution_2" id="institution_2" placeholder="University / College / Institution" required value="">
+																		<div class="input-group-addon" style="display: none;"><i class="fa fa-university"></i></div>
+																</div><br>
+														</div>
+														<div class="control-group col-lg-6 col-sm-6 col-md-6 col-xs-12">
+																<div class="input-group">
+																		<div class="input-group-addon"><input type="checkbox" id="is_studying_2_check"></div>
+																		<input type="text" class="form-control" name="grade_2" id="grade_2" placeholder="Degree-Course" required value="">
+																		<div class="input-group-addon" style="display: none;"><i class="fa fa-book"></i></div>
+																</div><br>
+														</div>
+														<input type="hidden" id="is_studying_1" name="is_studying_1" value="False">
+														<input type="hidden" id="is_studying_2" name="is_studying_2" value="False">
+														<div class="control-group col-lg-12 col-sm-12 col-md-12 col-xs-12" style="margin-bottom:15px;">
+																<textarea name="intro" id="intro" class="form-control" rows="4" required="required" placeholder="Give an intro to you....."></textarea>
+														</div>
+							<p class="error-msg text-center text-danger">{% if errors %}{% endif %}</p>
+							<div class="form-group text-center">
+								<button type="button" class="btn btn-sm btn-success" id="step_2_btn"><i class="fa fa-arrow-right"></i> Next Step</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Step2  Ends !-->
+{% endblock %}

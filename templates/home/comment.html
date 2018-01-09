@@ -1,0 +1,10 @@
+{% load humanize %}
+<ul class="list-group" style="margin-bottom:0px;">
+	{% for comment in comments %}
+		<li class="list-group-item">
+		<span class="badge">{{ comment.time | naturaltime }}</span>
+		<span style="font-size:12px" class="text-primary">{{ comment.user.get_full_name }}</span><br>
+		<span style="font-size:12px;margin-left:25px;"></span>{{ comment.comment }}
+	</li>
+	{% endfor %}
+</ul>

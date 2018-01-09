@@ -1,0 +1,212 @@
+{% load humanize %}
+{% load static %}
+{% for feed in feeds %}
+{% if feed.upload_image %}
+<div class="panel panel-default" style="border: 0px solid transparent;">
+	<div class="panel-heading">
+		<span class="text-primary">{{ feed.user.get_full_name }}</span> added an image <br>
+		{% if feed.upload_location %}
+		<span class="feed_at"><i class="fa fa-map-marker"></i> at {{ feed.upload_location }}</span>
+		{% endif %}
+		<span class="feed_time"><i class="fa fa-clock-o"></i> {{ feed.created_at | naturaltime }}</span>
+	</div>
+	<div class="panel-body" style="padding: 0px;border:1px solid white;">
+		<img src=" {{ feed.upload_image }}" style="width: 100%; height: 250px;background: {% static 'website/backgrounds/move-2.jpg' %};">
+		<div class="feed-body" style="padding-left:15px;">{{ feed.content }}</div>
+	</div>
+	<div class="panel-footer footer-btns">
+		<div class="btn-group">
+			<a class="btn btn-default" role="button" style="border-top-left-radius: 0px;" onclick="feed_like({{ feed.pk }})" id="feed_like_{{ feed.pk }}_btn">{% if feed.liked %}<i class="fa fa-heart" style="color: orangered;"></i>{% else %}<i class="fa fa-heart-o"></i>{% endif %}</a>
+			<a class="btn btn-default" onclick="show_feed_comment_panel({{ feed.pk }})" role="button"><i class="fa fa-retweet" style="color:grey;"></i></a>
+			<a class="btn btn-default feed_like_{{ feed.pk }}_count_btn" role="button" style="border-top-right-radius: 0px;{% if feed.like_set.count < 1 %}display:none;{% endif %}"><span class="feed_like_{{ feed.pk }}_count">{{ feed.like_set.count }}</span>  <span style="color:orangered;">Like{% if feed.like_set.count > 1 %}s{% endif %}</span></a>
+			<a class="btn btn-default" onclick="show_feed_comment_panel({{ feed.pk }})" role="button" style="{% if feed.comment_set.count  < 1 %}display:none;{% endif %}border-top-right-radius: 0px;border-bottom-right-radius: 0px;">{{ feed.comment_set.count }} <span style="color:orangered;">Ping{% if feed.comment_set.count  > 1 %}s{% endif %}</span></a>
+		</div>
+		<div class="panel panel-default" style="margin-bottom:0px;display:none;" id="feed_{{ feed.pk }}_comment_panel" data-target="open">
+			<div class="panel-heading">Viewing all {{ feed.comment_set.count }} Ping{% if feed.comment_set.count  > 1 %}s{% endif %}</div>
+			<div class="panel-body" style="margin-bottom:0px;padding:0px;">
+				<div class="progress" style="height:5px;border-bottom-left-radius:0px;display: none;" id="feed_{{ feed.pk }}_comment_bar">
+					<div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar"
+						 aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" style="width: 100%;transition:1s width ease;">
+						<span class="sr-only">50% Complete</span>
+					</div>
+				</div>
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="Place a ping..." style="border-radius:0px;" id="feed_{{ feed.pk }}_new_comment">
+					<div class="input-group-addon" style="cursor:pointer;background:white;color:orangered;border-radius:0px;" onclick="post_comment($('#feed_{{ feed.pk }}_new_comment').val(),{{ feed.pk }});"><i class="fa fa-comment"></i></div>
+				</div>
+			</div>
+			<div class="panel-footer" style="margin-bottom:0px;padding:0px;" id='feed_{{ feed.pk }}_comment_list'>
+				<ul class="list-group" style="margin-bottom:0px;">
+					{% for comment in feed.comment_set.all %}
+						<li class="list-group-item">
+						<span class="badge">{{ comment.time | naturaltime }}</span>
+						<span style="font-size:12px" class="text-primary">{{ comment.user.get_full_name }}</span><br>
+						<span style="font-size:12px;margin-left:25px;"></span>{{ comment.comment }}
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+{% elif feed.upload_video %}
+<div class="panel panel-default" style="border: 0px solid white;">
+	<div class="panel-heading">
+		<span class="text-primary">{{ feed.user.get_full_name }}</span> added a video <br>
+		{% if feed.upload_location %}
+		<span class="feed_at"><i class="fa fa-map-marker"></i> at {{ feed.upload_location }}</span>
+		{% endif %}
+		<span class="feed_time"><i class="fa fa-clock-o"></i> {{ feed.created_at | naturaltime }}</span>
+	</div>
+	<div class="panel-body" style="padding: 0px;border:1px solid white;">
+		<iframe src="{{ feed.upload_video }}" style="width: 100%; height: 250px;"></iframe>
+		<div class="feed-body">{{ feed.content }}</div>
+	</div>
+	<div class="panel-footer footer-btns">
+		<div class="btn-group">
+			<a class="btn btn-default" role="button" style="border-top-left-radius: 0px;" onclick="feed_like({{ feed.pk }})" id="feed_like_{{ feed.pk }}_btn">{% if feed.liked %}<i class="fa fa-heart" style="color: orangered;"></i>{% else %}<i class="fa fa-heart-o"></i>{% endif %}</a>
+			<a class="btn btn-default" onclick="show_feed_comment_panel({{ feed.pk }})" role="button"><i class="fa fa-retweet" style="color:grey;"></i></a>
+			<a class="btn btn-default feed_like_{{ feed.pk }}_count_btn" role="button" style="border-top-right-radius: 0px;{% if feed.like_set.count < 1 %}display:none;{% endif %}"><span class="feed_like_{{ feed.pk }}_count">{{ feed.like_set.count }}</span>  <span style="color:orangered;">Like{% if feed.like_set.count > 1 %}s{% endif %}</span></a>
+			<a class="btn btn-default" onclick="show_feed_comment_panel({{ feed.pk }})" role="button" style="{% if feed.comment_set.count  < 1 %}display:none;{% endif %}border-top-right-radius: 0px;border-bottom-right-radius: 0px;">{{ feed.comment_set.count }} <span style="color:orangered;">Ping{% if feed.comment_set.count  > 1 %}s{% endif %}</span></a>
+		</div>
+		<div class="panel panel-default" style="margin-bottom:0px;display:none;" id="feed_{{ feed.pk }}_comment_panel" data-target="open">
+			<div class="panel-heading">Viewing all {{ feed.comment_set.count }} Ping{% if feed.comment_set.count  > 1 %}s{% endif %}</div>
+			<div class="panel-body" style="margin-bottom:0px;padding:0px;">
+				<div class="progress" style="height:5px;border-bottom-left-radius:0px;display: none;" id="feed_{{ feed.pk }}_comment_bar">
+					<div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar"
+						 aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" style="width: 100%;transition:1s width ease;">
+						<span class="sr-only">50% Complete</span>
+					</div>
+				</div>
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="Place a ping..." style="border-radius:0px;" id="feed_{{ feed.pk }}_new_comment">
+					<div class="input-group-addon" style="cursor:pointer;background:white;color:orangered;border-radius:0px;" onclick="post_comment($('#feed_{{ feed.pk }}_new_comment').val(),{{ feed.pk }});"><i class="fa fa-comment"></i></div>
+				</div>
+			</div>
+			<div class="panel-footer" style="margin-bottom:0px;padding:0px;" id='feed_{{ feed.pk }}_comment_list'>
+				<ul class="list-group" style="margin-bottom:0px;">
+					{% for comment in feed.comment_set.all %}
+						<li class="list-group-item">
+						<span class="badge">{{ comment.time | naturaltime }}</span>
+						<span style="font-size:12px" class="text-primary">{{ comment.user.get_full_name }}</span><br>
+						<span style="font-size:12px;margin-left:25px;"></span>{{ comment.comment }}
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+{% else %}
+<div class="panel panel-default" style="border: 0px solid white;">
+	<div class="panel-heading">
+		<span class="text-primary">{{ feed.user.get_full_name }}</span> posted an update <br>
+		{% if feed.upload_location %}
+		<span class="feed_at"><i class="fa fa-map-marker"></i> at {{ feed.upload_location }}</span>
+		{% endif %}
+		<span class="feed_time"><i class="fa fa-clock-o"></i> {{ feed.created_at | naturaltime }}</span>
+	</div>
+	<div class="panel-body feed-body">
+		 {{ feed.content }}
+	</div>
+	<div class="panel-footer footer-btns">
+		<div class="btn-group">
+			<a class="btn btn-default" role="button" style="border-top-left-radius: 0px;" onclick="feed_like({{ feed.pk }})" id="feed_like_{{ feed.pk }}_btn">{% if feed.liked %}<i class="fa fa-heart" style="color: orangered;"></i>{% else %}<i class="fa fa-heart-o"></i>{% endif %}</a>
+			<a class="btn btn-default" onclick="show_feed_comment_panel({{ feed.pk }})" role="button"><i class="fa fa-retweet" style="color:grey;"></i></a>
+			<a class="btn btn-default feed_like_{{ feed.pk }}_count_btn" role="button" style="border-top-right-radius: 0px;{% if feed.like_set.count < 1 %}display:none;{% endif %}"><span class="feed_like_{{ feed.pk }}_count">{{ feed.like_set.count }}</span>  <span style="color:orangered;">Like{% if feed.like_set.count > 1 %}s{% endif %}</span></a>
+			<a class="btn btn-default" onclick="show_feed_comment_panel({{ feed.pk }})" role="button" style="{% if feed.comment_set.count  < 1 %}display:none;{% endif %}border-top-right-radius: 0px;border-bottom-right-radius: 0px;">{{ feed.comment_set.count }} <span style="color:orangered;">Ping{% if feed.comment_set.count  > 1 %}s{% endif %}</span></a>
+		</div>
+		<div class="panel panel-default" style="margin-bottom:0px;display:none;" id="feed_{{ feed.pk }}_comment_panel" data-target="open">
+			<div class="panel-heading">Viewing all {{ feed.comment_set.count }} Ping{% if feed.comment_set.count  > 1 %}s{% endif %}</div>
+			<div class="panel-body" style="margin-bottom:0px;padding:0px;">
+				<div class="progress" style="height:5px;border-bottom-left-radius:0px;display: none;" id="feed_{{ feed.pk }}_comment_bar">
+					<div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar"
+						 aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" style="width: 100%;transition:1s width ease;">
+						<span class="sr-only">50% Complete</span>
+					</div>
+				</div>
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="Place a ping..." style="border-radius:0px;" id="feed_{{ feed.pk }}_new_comment">
+					<div class="input-group-addon" style="cursor:pointer;background:white;color:orangered;border-radius:0px;" onclick="post_comment($('#feed_{{ feed.pk }}_new_comment').val(),{{ feed.pk }});"><i class="fa fa-comment"></i></div>
+				</div>
+			</div>
+			<div class="panel-footer" style="margin-bottom:0px;padding:0px;" id='feed_{{ feed.pk }}_comment_list'>
+				<ul class="list-group" style="margin-bottom:0px;">
+					{% for comment in feed.comment_set.all %}
+						<li class="list-group-item">
+						<span class="badge">{{ comment.time | naturaltime }}</span>
+						<span style="font-size:12px" class="text-primary">{{ comment.user.get_full_name }}</span><br>
+						<span style="font-size:12px;margin-left:25px;"></span>{{ comment.comment }}
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %}
+{% endfor %}
+<script>
+	function feed_like(feed_id){
+		var liked_btn = '<i class="fa fa-heart" style="color: orangered;"></i>';
+		var unliked_btn = '<i class="fa fa-heart-o"></i>';
+		var url = '/feeds/'+feed_id+'/like/';
+		$.get(url)
+		.done(function(data){
+			var like = parseInt($('.feed_like_'+feed_id+'_count').html());
+			if(data == 'liked'){
+				$('#feed_like_'+feed_id+'_btn').html(liked_btn);
+				console.log($('.feed_like_'+feed_id+'_count').html());
+				$('.feed_like_'+feed_id+'_count').html(like+1);
+				$('.feed_like_'+feed_id+'_count_btn').show();
+			}
+			else if (data == 'unliked'){
+				$('#feed_like_'+feed_id+'_btn').html(unliked_btn);
+				console.log($('.feed_like_'+feed_id+'_count').html());
+				$('.feed_like_'+feed_id+'_count').html(like-1);
+				if((like-1) == 0)
+					$('.feed_like_'+feed_id+'_count_btn').hide();
+			}
+			else{
+				console.log('Feed Failed Liked');
+			}
+		});
+	}
+	function show_feed_comment_panel(feed_id){
+		if($('#feed_'+feed_id+'_comment_panel').attr('data-target') == 'open'){
+			$('#feed_'+feed_id+'_comment_panel').show();
+			$('#feed_'+feed_id+'_comment_panel').attr('data-target', 'close');
+		}
+		else{
+			$('#feed_'+feed_id+'_comment_panel').hide();
+			$('#feed_'+feed_id+'_comment_panel').attr('data-target', 'open');
+		}
+	}
+	function post_comment(comment, feed_id){
+		console.log(comment+"->"+feed_id);
+		$('#feed_'+feed_id+'_comment_bar').show();
+		ping = $('#feed_'+feed_id+'_new_comment').val();
+		var data = {
+			"ping": ping,
+			"csrfmiddlewaretoken": "{{ csrf_token }}",
+			'feed_id': feed_id,
+		};
+		$('#feed_'+feed_id+'_new_comment').val('');
+		var request = $.post('{% url 'home:comment_feed' %}',data);
+		request.done(function(data){
+			if(data == "success"){
+				console.log('Succesfull');
+				$('#feed_'+feed_id+'_comment_list').load("{% url 'home:comment_feed' %}?feed_id="+feed_id);
+			}
+			else{
+				alert("Ping failed to add-> "+ data);
+				console.log(data);
+			}
+		});
+		request.fail(function(data){
+			alert("Ping request is rejected by server");
+			console.log(data.responseText);
+		});
+		$('#feed_'+feed_id+'_comment_bar').hide();
+	}
+</script>

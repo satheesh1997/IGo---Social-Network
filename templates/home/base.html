@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{{ server.title }}{% block title %}{% endblock %}</title>
+	<link rel="shortcut icon" href="{% static 'logo.ico' %}" type="image/x-icon">
+	<meta name="theme-color" content="{{ server.color }}">
+	<meta name="title" content="{{ server.title }}" />
+	<meta name="description" content="{{ server.description }}" />
+	<meta name="keyword" content="{{ server.keyword }}" />
+	<meta name="og:url" content="{{ server.url }}" />
+	<meta property="og:site_name" content="{{ server.title }}">
+	<meta property="og:title" content="{{ server.title }} - {{ server.site_name }}" />
+	<meta property="og:image" content="{{ server.url }}{% static 'logo.png' %}" />
+	<meta property="og:description" content="{{ server.description }}" />
+	<meta property="author" content="Lico Softwares" />
+	<meta property="og:type" content="website" />
+	<!-- Bootstrap Minified CSS -->
+	<link href="{% static 'website/css/bootstrap.min.css' %}" rel="stylesheet">
+	<!-- Fontawesome Minified CSS -->
+	<link href="{% static 'website/css/font-awesome.min.css' %}" rel="stylesheet">
+	<link rel="stylesheet" href="{% static 'website/css/jquery-ui.css' %}">
+	<!-- Minified CSS -->
+	<link href="{% static 'home/css/style.css' %}" rel="stylesheet">
+	<!-- Jquery Js -->
+	<script src="{% static 'website/js/jquery.min.js' %}"></script>
+	<script src="{% static 'website/js/jquery-ui.js' %}"></script>
+</head>
+
+<body>
+
+	<!-- Message for crawlers starts !-->
+	<p class="hidden">{{ server.title }} - {{ server.site_name }}</p>
+	<p class="hidden">{{ server.description }}</p>
+	<!-- Message for crawlers ends !-->
+
+	<!-- No-Internet Starts !-->
+	<div class="no-internet"></div>
+	<!-- No-Internet Ends !-->
+
+	<!-- Preloader Starts !-->
+	<div class="preloader">
+		<div class="progress" style="height:5px;margin-bottom:-10px;border-bottom-left-radius:0px;">
+			<input type="hidden" id="progress_width" value="0">
+			<div id="preloader-bar" class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar"
+				 aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" style="width: 0%;transition:1s width ease;">
+				<span class="sr-only">50% Complete</span>
+			</div>
+		</div>
+		<div class="logo text-center">
+			<span class="i">{{ server.first_site_name }}</span> <span class="visit">{{ server.last_site_name }}</span>
+			<p class="tag_line">{{ server.tag_line }}</p>
+		</div>
+	</div>
+	<!-- Preloader Ends !-->
+
+	<!-- Navigation Starts !-->
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+				<i class="fa fa-bars"></i>
+			</button>
+			<a class="navbar-brand" href="#"><img src="{% static 'logo.png' %}" class='logo-img' /></a>
+		</div>
+
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse navbar-ex1-collapse">
+			<form class="navbar-form navbar-left" role="search" id="search_form" action="/search">
+				<div class="input-group">
+					<input type="text" class="form-control search-box" name="q" id="q" placeholder="Search">
+					<div class="input-group-addon" onclick="submit_search()" style="cursor:pointer;background:white;color:orangered;"><i class="fa fa-search"></i></div>
+				</div>
+				<script id="search-script">
+					$("input#q").autocomplete({
+						source: [
+							 {% for user in server.users_list %}
+							 {% if user.first_name %}
+								{ value: "{{ user.first_name }} {{ user.last_name }}", url: 'http://{{ server.url }}/{{ user.username }}' },
+							 {% else %}
+								{ value: "{{ user.username }}", url: 'http://{{ server.url }}/{{ user.username }}' },
+							 {% endif %}
+							 {% endfor %}
+						],
+						select: function (event, ui) {
+							window.location = ui.item.url;
+						}
+					});
+				</script>
+			</form>
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="#"><img src="{{ request.user.profile_set.get.dp }}" style="width:20px;height:20px;" /> {{ request.user.get_full_name }}</a></li>
+				<li><a href="#"><i class="nav-mobile fa fa-home"></i> Home</a></li>
+				<li><a href="#"><i class="fa fa-gamepad"></i><span class="nav-mobile"> Games</span></a></li>
+				<li><a href="#"><i class="fa fa-comments"></i><span class="nav-mobile"> Messages</span></a></li>
+				<li class="visible-xs"><a href="{% url 'home:chat:mobile_active_userlist' %}"><i class="fa fa-users"></i><span class="nav-mobile"> Users List</span></a></li>
+				<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+					<i class="fa fa-chevron-down"></i><span class="nav-mobile"> Settings</span></a>
+				<ul class="dropdown-menu">
+					<li><a href="{% url 'logout' %}"><i class="fa fa-power-off"></i> Logout</a></li>
+				</ul>
+			</li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</nav>
+	<!-- Navigation Ends !-->
+	{% block container %}{% endblock %}
+<script src="{% static 'website/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'home/js/nav.min.js' %}"></script>
+<script src="{% static 'home/js/home.js' %}"></script>
+</body>
+</html>

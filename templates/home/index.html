@@ -1,0 +1,233 @@
+{% extends 'home/base.html' %}
+{% block title %} - Home {% endblock %}
+{% block container %}
+{% load static %}
+<div class="container">
+	<div class="row">
+		<div class="col-lg-3 col-sm-3 col-md-3 hidden-xs" style="position:fixed; width:21%;">
+			<div class="panel panel-default front-card-profile">
+				<div class="panel-heading text-center">
+					<img src="{{ request.user.profile_set.get.dp }}" alt="Profile Picture of {{ request.user.username }}" class="img-thumbnail"/><br>
+					{% if request.user.profile_set.get.is_verified %}
+					<i class="fa fa-check-square-o" style="padding:5px;position: absolute;font-size: 20px;color: black;margin-top:-40px;background: transparent;text-align:center;""></i>
+					{% endif %}
+					{{ request.user.profile_set.get.intro }}
+				</div>
+				<div class="panel-body">
+					<div class="details text-center">
+						<p class="name">{{ request.user.get_full_name }}</p>
+						<p class="email">{{ request.user.email }}</p>
+						<p class="dob">{{ request.user.profile_set.get.dob }}</p>
+						<p class="gender">{{ request.user.profile_set.get.gender }}</p>
+						<p class="location">{{ request.user.profile_set.get.current_location }}</p>
+					</div>
+					<div class="social text-center">
+						{% if request.user.profile_set.get.website %}
+							<a href="{{ request.user.profile_set.get.website }}"><i class="fa fa-globe"></i></a>
+						{% endif %}
+						{% if request.user.profile_set.get.facebook %}
+							<a href="http://facebook.com/{{ request.user.profile_set.get.facebook }}"><i class="fa fa-facebook"></i></a>
+						{% endif %}
+						{% if request.user.profile_set.get.git %}
+							<a href="http://github.com/{{ request.user.profile_set.get.git }}}"><i class="fa fa-github"></i></a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-default front-card-education">
+				<div class="panel-body text-center">
+					{% for result in request.user.education_set.all %}
+						<p class="detail">
+							{% if result.is_studying %}
+								Studying
+							{% else %}
+								Studied
+							{% endif %}
+							{% if result.grade %}
+								{{ result.grade }} at
+							{% else %}
+								in
+							{% endif %}
+							{{ result.institution }}
+						</p>
+					{% endfor %}
+				</div>
+			</div>
+			<h5 class="text-center" style="color:white;"> Made with <i class="fa fa-heart"></i> in India </h5>
+		</div>
+		<div class="col-lg-6 col-sm-6 col-md-6 col-lg-offset-3 col-md-offset-3 col-sm-offset-3">
+			<form action="{% url 'home:add_feed' %}" method="post" id="feed_form">
+			<div class="panel panel-default" id="say_some_thing_box">
+				<div class="panel-heading">What's on your mind?<span class="pull-right text-danger" id="form-error"></span></div>
+				<div class="panel-body">
+					{% csrf_token %}
+					<div class="publish_preview">
+						<img src="http://muraski.com/wp-content/themes/muraski/img/ajax-load.gif" style="height:200px;width:100%;display:none;" id="up_img" alt='Loading......' onerror="this.onerror=null;$('#upload_pic').val('');this.src='http://www.guoguiyan.com/data/out/65/70369302-error-wallpapers.jpeg';">
+						 <iframe width="100%" height="250"
+							src="" style="display: none;" id="up_video">
+						 </iframe>
+						 <div style="width:100%; height:250px;display: none;" id="map"></div>
+					</div>
+					<div class="box">
+						<div class="col-lg-2 col-sm-2 col-md-2 col-xs-2" style="padding:0px; padding-top: 5px;padding-bottom: 5px;">
+							<img src="{{ request.user.profile_set.get.dp }}" alt="Profile Picture of {{ request.user.username }}" class="img-responsive"/>
+						</div>
+						<div class="col-lg-10 col-sm-10 col-md-10 col-xs-10" style="padding: 0px;">
+							<textarea id="say_something" class="form-control" rows="4"  name ="upload_feed" placeholder="Say something..."></textarea>
+						</div>
+					</div>
+					<script type="text/javascript">
+						$('#say_something').on('blur', function(){
+							if($(this).val().length < 10){
+								$(this).parent('.col-lg-10').addClass('has-error');
+							}
+							else{
+								$(this).parent('.col-lg-10').removeClass('has-error');
+							}
+						});
+					</script>
+					<input type="file" id="up_img_btn" style="display:none;">
+					<div class="input-group" style="display:none;" id="upload_a_pic">
+						<input type="url" class="form-control" name="upload_pic" id="upload_pic" placeholder="Enter a url or Choose a image">
+						<script type="text/javascript">
+							$('#upload_pic').on('change', function(){
+								$(this).parent('.input-group').removeClass('has-error');
+								$('#up_img').show();
+								if($(this).val() != null){
+									$('#up_img').attr('src', $('#upload_pic').val());
+								}
+								else{
+									$(this).parent('.input-group').addClass('has-error');
+									$('#up_img').hide();
+								}
+							});
+							$('#upload_pic').on('blur', function(){
+								$(this).parent('.input-group').removeClass('has-error');
+								if($(this).val() == ""){
+									$(this).parent('.input-group').addClass('has-error');
+									$('#up_img').attr('src', '');
+									$('#up_img').hide();
+								}
+							});
+						</script>
+						<div class="input-group-addon" style="border-radius:0px;border-top:1px solid grey;border-bottom:1px solid grey;cursor:pointer;" id="up_img_fake_btn"><i class="fa fa-image"></i> Browse</div>
+						<script type="text/javascript">
+							$('#up_img_fake_btn').click(function(){
+								if($('#upload_pic').val() != ""){
+									if(confirm('Do you want to upload a new image?')){
+									   $('#upload_pic').val('');
+									   $('#up_img_btn').click();
+									}
+								}
+								else{
+									$('#up_img_btn').click();
+								}
+							});
+						</script>
+					</div>
+					<div class="input-group" style="display:none;" id="upload_a_video">
+						<div class="input-group-addon" style="border-radius:0px;border-top:1px solid grey;border-bottom:1px solid grey;cursor:pointer;"><i class="fa fa-video-camera"></i> Link</div>
+						<input type="url" class="form-control" name="upload_video" id="upload_video" placeholder="Enter embed youtube video link" style="border-radius:0px;">
+					</div>
+					<script type="text/javascript">
+						$('#upload_video').on('blur', function(){
+							$(this).parent('.input-group').removeClass('has-error');
+							if($(this).val() == "" || $(this).val().length < 10){
+								$(this).parent('.input-group').addClass('has-error');
+								$('#up_video').attr('src', '');
+								$('#up_video').hide();
+							}
+							else{
+								$('#up_video').attr('src', $(this).val());
+								$('#up_video').show();
+							}
+						});
+					</script>
+					<div class="input-group" style="display:none;" id="upload_a_location">
+						<div class="input-group-addon" style="border-radius:0px;border-top:1px solid grey;border-bottom:1px solid grey;cursor:pointer;"><i class="fa fa-map-marker"></i></div>
+						<input type="text" class="form-control" name="upload_location" id="upload_location" placeholder="Where were you?" style="border-radius:0px;">
+						<script type="text/javascript">
+							$('#upload_location').on('focus', function(){
+								if($('#upload_location').val() != ' '){
+									$('#map').show();
+								}
+							});
+							$('#upload_location').on('blur', function(){
+								if($('#upload_location').val().length < 3){
+									$('#map').hide();
+								}
+							});
+						</script>
+					</div>
+					<script type="text/javascript">
+						$('#upload_location').on('blur', function(){
+							$(this).parent('.input-group').removeClass('has-error');
+							if($(this).val() == "" || $(this).val.length < 10){
+								$(this).parent('.input-group').addClass('has-error');
+							}
+						});
+					</script>
+				</div>
+				<div class="panel-footer">
+					<div class="pull-left">
+						<ul class="nav nav-pills">
+							<li onclick="show_upload_pic()"><a style="cursor:pointer;"><i class="fa fa-camera"></i> <span class="mobile">Photo</span></a></li>
+							<li onclick="show_upload_video()"><a style="cursor:pointer;"><i class="fa fa-video-camera"></i> <span class="mobile">Video</span></a></li>
+							<li onclick="show_upload_location()"><a style="cursor: pointer;"><i class="fa fa-map-marker"></i> <span class="mobile">Location</span></a></li>
+						</ul>
+					</div>
+					<script type="text/javascript" id="upload_buttons">
+						function show_upload_pic(){
+							$('#upload_a_video').hide();
+							$('#upload_a_location').hide();
+							$('#upload_a_pic').show();
+							$('#map').hide();
+						}
+						function show_upload_video(){
+							$('#upload_a_pic').hide();
+							$('#upload_a_location').hide();
+							$('#upload_a_video').show();
+							$('#map').hide();
+						}
+						function show_upload_location(){
+							$('#upload_a_pic').hide();
+							$('#upload_a_video').hide();
+							$('#upload_a_location').show();
+						}
+					</script>
+					<div class="pull-right">
+						<button class="btn btn-sm btn-success" id="feed_up_btn"><i class="fa fa-feed"></i> Publish</button>
+					</div>
+				</div>
+			</div>
+			</form>
+			<div id="loaded_feeds"></div>
+			<script type="text/javascript">
+				$('#loaded_feeds').load('{% url 'home:show_feeds' %}');
+			</script>
+		</div>
+		<div class="col-lg-3 col-sm-3 col-md-3 hidden-xs affix col-lg-offset-8 col-md-offset-8 col-sm-offset-8">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					Online Users
+				</div>
+				<div class="panel-body" style="padding:0px;height:435px;overflow-y:scroll;scrollbar-base-color: orange;scrollbar-arrow-color: green;scrollbar-DarkShadow-Color: blue; ">
+					<ul class="list-group" style="margin-bottom:0px;" id="chat_active"></ul>
+					<script>setInterval($('#chat_active').load("{% url 'home:chat:active_userlist' %}"),1000);</script>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyC-OiWrk3Q29YGBEzNQANtJuk5No4uZW-o&sensor=false&libraries=places"></script>
+<script src="{% static 'website/js/jquery.geocomplete.min.js' %}"></script>
+<script>
+$(function () {
+	$("#upload_location").geocomplete({
+	  detailsAttribute: "data-geo",
+	  map:"#map",
+	});
+
+});
+</script>
+{% endblock %}

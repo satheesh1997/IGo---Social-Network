@@ -1,0 +1,103 @@
+{% extends 'registration/base.html' %}
+{% block title %} - Step1 {% endblock %}
+{% block container %}
+<!-- Login Starts !-->
+<div class="container-fluid update-step">
+	<div class="row">
+		<div class="col col-lg-6 col-sm-6 col-md-6 col-xs-12 col-lg-offset-6 col-md-offset-6 col-sm-offset-6">
+				 <div class="progress" style="height:10px;margin-bottom:-10px;border-bottom-left-radius:0px;">
+					  <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar"
+							 aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" style="width: 0%;transition:1s width ease;">
+							<span class="sr-only">0% Complete</span>
+					  </div>
+				 </div>
+				 <div class="panel panel-default">
+				<div class="panel-body">
+							<h3 class="text-center text-danger">Step 1</h3>
+					<h4 class="text-center text-primary">Update your profile to proceed with login<br><br></h4>
+					<form action="" method="post" class="form-horizontal" role="form" id="step_1_form">
+						{% csrf_token %}
+								 <div class="control-group col-lg-6 col-sm-6 col-md-6 col-xs-12">
+									  <div class="input-group">
+											<div class="input-group-addon"><i class="fa fa-user"></i></div>
+											<input type="text" class="form-control" name="first_name" id="first_name" placeholder="First Name" required value="{{ request.user.first_name }}">
+											<div class="input-group-addon" style="display: none;"><i class="fa fa-user"></i></div>
+									  </div><br>
+								 </div>
+								 <div class="control-group col-lg-6 col-sm-6 col-md-6 col-xs-12">
+									  <div class="input-group">
+											<div class="input-group-addon"><i class="fa fa-user"></i></div>
+											<input type="text" class="form-control" name="last_name" id="last_name" placeholder="Last Name" required value="{{ request.user.last_name }}">
+											<div class="input-group-addon" style="display: none;"><i class="fa fa-user"></i></div>
+									  </div><br>
+								 </div>
+								 <div class="control-group col-lg-6 col-sm-6 col-md-6 col-xs-12">
+									  <div class="input-group">
+											<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+											<input type="text" class="form-control" name="dob" id="dob" placeholder="Date Of Birth (mm/dd/yy)" required>
+											<div class="input-group-addon" style="display: none;"><i class="fa fa-calendar"></i></div>
+									  </div><br>
+								 </div>
+								 <div class="control-group col-lg-6 col-sm-6 col-md-6 col-xs-12">
+									  <div class="input-group">
+											<div class="input-group-addon"><i class="fa fa-heart"></i></div>
+											<select id="status" name="status" class="form-control" data-live-search="true" title="Select your status">
+												 <option value="" style="color:grey;">Relationship Status</option>
+												 <option value="Single">Single</option>
+												 <option value="In a relationship">In a relationship</option>
+											</select>
+											<div class="input-group-addon" style="display: none;"><i class="fa fa-heart"></i></div>
+									  </div><br>
+								 </div>
+								 <input type="hidden" name="gender" value="Male" id="gender">
+								 <div class="control-group col-lg-6 col-sm-6 col-md-6 col-xs-12">
+									  <div class="input-group-btn" data-toggle="buttons">
+										 <label class="btn btn-orangered active" style="width:50%;">
+											<input type="radio" id="male" autocomplete="off" checked value="Male">Male
+										 </label>
+										 <label class="btn btn-orangered" style="width:50%;border-top-right-radius:4px;border-bottom-right-radius:4px;">
+											<input type="radio" id="female" autocomplete="off" value="Female">Female
+										 </label>
+									  </div><br>
+								 </div>
+								 <div class="control-group col-lg-6 col-sm-6 col-md-6 col-xs-12">
+									  <div class="input-group">
+											<div class="input-group-addon"><i class="fa fa-map-marker"></i></div>
+											<input type="text" class="form-control" name="location" id="location" placeholder="Location" required>
+											<div class="input-group-addon" style="display: none;"><i class="fa fa-map-pin"></i></div>
+									  </div><br>
+								 </div>
+								 <div class="control-group col-lg-6 col-sm-6 col-md-6 col-xs-12">
+									  <div class="input-group">
+											<div class="input-group-addon"><i class="fa fa-globe"></i></div>
+											<input type="text" class="form-control" name="website" id="website" placeholder="Website">
+											<div class="input-group-addon" style="display: none;"><i class="fa fa-globe"></i></div>
+									  </div><br>
+								 </div>
+								 <div class="control-group col-lg-6 col-sm-6 col-md-6 col-xs-12">
+									  <div class="input-group">
+											<input type="file" id="dp_up" class="hidden">
+											<div class="input-group-addon" style="padding:1px;padding-left:5px;padding-right:5px;border-top-left-radius:4px;border-bottom-left-radius:4px;"><img id='dp_up_img' src="http://techtrendz.in/uploads/a1df072abf2a58cfa0bd90fce5a0b65eac9e4952e7dc8c1b1dd05c24bfdb3947/images/default.png" style="width:20px;height:20px;" length=0></div>
+											<input type="text" class="form-control no-form-control" name="dp" id="dp" placeholder="Profile Picture" value="" onfocus="empty()" onkeypress="empty()" style="cursor:pointer;">
+											<div class="input-group-addon" id="dp_up_btn" style="cursor:pointer;"><i class="fa fa-upload"></i></div>
+									  </div><br>
+								 </div>
+								 <script>						 	
+									  $('#dp').on('keydown', function(e){
+											if(e.which == 13){
+												 $('#step_1_btn').click();
+											}
+									  });
+								 </script>
+						<p class="error-msg text-center text-danger"></p>
+						<div class="form-group text-center">
+							<button type="button" class="btn btn-sm btn-success" id="step_1_btn"><i class="fa fa-arrow-right"></i> Next Step</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Login  Ends !-->
+{% endblock %}
